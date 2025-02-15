@@ -204,29 +204,3 @@ def buscar_pedidos(id_usuario=None, status=None):
     conn.close()
     return resultado
 
-def buscar_entregas(id_pedido=None, id_transportadora=None, id_motorista=None, data_entrega=None):
-    condicoes = []
-    params = []
-
-    if id_pedido:
-        condicoes.append("id_pedido = ?")
-        params.append(id_pedido)
-    if id_transportadora:
-        condicoes.append("id_transportadora = ?")
-        params.append(id_transportadora)
-    if id_motorista:
-        condicoes.append("id_motorista = ?")
-        params.append(id_motorista)
-    if data_entrega:
-        condicoes.append("data_entrega = ?")
-        params.append(data_entrega)
-
-    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
-
-    query = f"SELECT * FROM Entrega WHERE {condicao_sql}"
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    resultado = cursor.fetchall()
-    conn.close()
-    return resultado

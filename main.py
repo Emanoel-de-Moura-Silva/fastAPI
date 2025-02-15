@@ -90,10 +90,6 @@ def api_buscar_produtos(produto: Produto):
 def api_buscar_pedidos(pedido: Pedido):
     return buscar_pedidos(pedido.id_usuario, pedido.status)
 
-@app.post("/buscarEntregas")
-def api_buscar_entregas(entrega: Entrega):
-    return buscar_entregas(entrega.id_pedido, entrega.id_transportadora, entrega.id_motorista, entrega.data_entrega)
-
 
 @app.get("/getTabela")
 def e(tabelaa: str = Query(...)):
