@@ -128,3 +128,105 @@ def criar_gatilho():
     END
     """
     executar_query(query)
+
+def buscar_usuarios(id_usuario=None, nome=None, email=None, status=None):
+    condicoes = []
+    params = []
+
+    if id_usuario:
+        condicoes.append("id_usuario = ?")
+        params.append(id_usuario)
+    if nome:
+        condicoes.append("LOWER(nome) LIKE LOWER(?)")
+        params.append(f"%{nome}%")
+    if email:
+        condicoes.append("LOWER(email) = LOWER(?)")
+        params.append(email)
+    if status:
+        condicoes.append("LOWER(status) = LOWER(?)")
+        params.append(status)
+
+    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
+
+    query = f"SELECT * FROM Usuarios WHERE {condicao_sql}"
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado
+
+def buscar_produtos(nome=None, preco=None, categoria=None, estoque=None):
+    condicoes = []
+    params = []
+
+    if nome:
+        condicoes.append("LOWER(nome) = LOWER(?)")
+        params.append(nome)
+    if preco:
+        condicoes.append("preco = ?")
+        params.append(preco)
+    if categoria:
+        condicoes.append("LOWER(categoria) = LOWER(?)")
+        params.append(categoria)
+    if estoque:
+        condicoes.append("estoque = ?")
+        params.append(estoque)
+
+    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
+    
+    query = f"SELECT * FROM Produtos WHERE {condicao_sql}"
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado
+
+def buscar_pedidos(id_usuario=None, status=None):
+    condicoes = []
+    params = []
+
+    if id_usuario:
+        condicoes.append("id_usuario = ?")
+        params.append(id_usuario)
+    if status:
+        condicoes.append("LOWER(status) = LOWER(?)")
+        params.append(status)
+
+    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
+
+    query = f"SELECT * FROM Pedidos WHERE {condicao_sql}"
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado
+
+def buscar_entregas(id_pedido=None, id_transportadora=None, id_motorista=None, data_entrega=None):
+    condicoes = []
+    params = []
+
+    if id_pedido:
+        condicoes.append("id_pedido = ?")
+        params.append(id_pedido)
+    if id_transportadora:
+        condicoes.append("id_transportadora = ?")
+        params.append(id_transportadora)
+    if id_motorista:
+        condicoes.append("id_motorista = ?")
+        params.append(id_motorista)
+    if data_entrega:
+        condicoes.append("data_entrega = ?")
+        params.append(data_entrega)
+
+    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
+
+    query = f"SELECT * FROM Entrega WHERE {condicao_sql}"
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado
