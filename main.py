@@ -53,6 +53,14 @@ class Endereco(BaseModel):
     estado: str
     cep: str
 
+class EnderecoBusca(BaseModel):
+    id_usuario: Optional[int] = None
+    rua: Optional[str] = None
+    cidade: Optional[str] = None
+    estado: Optional[str] = None
+    cep: Optional[str] = None
+
+
 class Produto(BaseModel):
     nome: str
     preco: float
@@ -108,6 +116,10 @@ def api_buscar_produtos(produto: ProdutoBusca):
 @app.post("/buscarPedidos")
 def api_buscar_pedidos(pedido: PedidoBusca):
     return buscar_pedidos(pedido.id_usuario, pedido.status)
+
+@app.post("/buscarEnderecos")
+def api_buscar_enderecos(endereco: EnderecoBusca):
+    return buscar_enderecos(endereco.id_usuario, endereco.rua, endereco.cidade, endereco.estado, endereco.cep)
 
 
 @app.get("/getTabela")

@@ -207,3 +207,33 @@ def buscar_pedidos(id_usuario=None, status=None):
     resultado = cursor.fetchall()
     conn.close()
     return resultado
+
+def buscar_enderecos(id_usuario=None, rua=None, cidade=None, estado=None, cep=None):
+    condicoes = []
+    params = []
+
+    if id_usuario is not None:  # Garante que 0 seja considerado
+        condicoes.append("id_usuario = ?")
+        params.append(id_usuario)
+    if rua:
+        condicoes.append("LOWER(rua) LIKE LOWER(?)")
+        params.append(f"%{rua}%")  # Permite buscas parciais
+    if cidade:
+        condicoes.append("LOWER(cidade) LIKE LOWER(?)")
+        params.append(f"%{cidade}%")  # Permite buscas parciais
+    if estado:
+        condicoes.append("LOWER(estado) LIKE LOWER(?)")
+        params.append(f"%{estado}%")  # Permite buscas parciais
+    if cep:
+        condicoes.append("cep = ?")
+        params.append(cep)  # Busca exata para CEP
+
+    condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
+
+    query = f"SELECT * FROM Enderecos WHERE {condicao_sql}"
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado

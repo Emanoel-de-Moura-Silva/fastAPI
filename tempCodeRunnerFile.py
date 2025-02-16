@@ -1,1 +1,1 @@
-deleteEnderecos
+/postPedidos
