@@ -1,1 +1,1 @@
-/postUsuarios
+postUsuarios
