@@ -167,13 +167,13 @@ def buscar_produtos(nome=None, preco=None, categoria=None, estoque=None):
     if nome:
         condicoes.append("LOWER(nome) LIKE LOWER(?)")
         params.append(f"%{nome}%")  # Permite buscas parciais
-    if preco is not None:  # Garante que 0 não seja ignorado
+    if preco not in [None, 0]:  # Ignora preço se for None ou 0
         condicoes.append("preco = ?")
         params.append(preco)
     if categoria:
         condicoes.append("LOWER(categoria) LIKE LOWER(?)")
         params.append(f"%{categoria}%")  # Permite buscas parciais
-    if estoque is not None:  # Garante que 0 não seja ignorado
+    if estoque not in [None, 0]:  # Ignora estoque se for None ou 0
         condicoes.append("estoque = ?")
         params.append(estoque)
 
@@ -186,6 +186,7 @@ def buscar_produtos(nome=None, preco=None, categoria=None, estoque=None):
     resultado = cursor.fetchall()
     conn.close()
     return resultado
+
 
 def buscar_pedidos(id_usuario=None, status=None):
     condicoes = []
@@ -212,21 +213,21 @@ def buscar_enderecos(id_usuario=None, rua=None, cidade=None, estado=None, cep=No
     condicoes = []
     params = []
 
-    if id_usuario is not None:  # Garante que 0 seja considerado
+    if id_usuario not in [None, 0]:  # Ignora 0 como se fosse vazio
         condicoes.append("id_usuario = ?")
         params.append(id_usuario)
     if rua:
         condicoes.append("LOWER(rua) LIKE LOWER(?)")
-        params.append(f"%{rua}%")  # Permite buscas parciais
+        params.append(f"%{rua}%")  
     if cidade:
         condicoes.append("LOWER(cidade) LIKE LOWER(?)")
-        params.append(f"%{cidade}%")  # Permite buscas parciais
+        params.append(f"%{cidade}%")
     if estado:
         condicoes.append("LOWER(estado) LIKE LOWER(?)")
-        params.append(f"%{estado}%")  # Permite buscas parciais
+        params.append(f"%{estado}%")
     if cep:
         condicoes.append("cep = ?")
-        params.append(cep)  # Busca exata para CEP
+        params.append(cep)
 
     condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
 
