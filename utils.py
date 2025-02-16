@@ -129,7 +129,7 @@ def criar_gatilho():
     """
     executar_query(query)
 
-def buscar_usuarios(id_usuario=None, nome=None, email=None, status=None):
+def buscar_usuarios(id_usuario=None, nome=None, email=None, telefone=None, data_nascimento=None):
     condicoes = []
     params = []
 
@@ -142,9 +142,12 @@ def buscar_usuarios(id_usuario=None, nome=None, email=None, status=None):
     if email:
         condicoes.append("LOWER(email) = LOWER(?)")
         params.append(email)
-    if status:
-        condicoes.append("LOWER(status) = LOWER(?)")
-        params.append(status)
+    if telefone:
+        condicoes.append("telefone = ?")
+        params.append(telefone)
+    if data_nascimento:
+        condicoes.append("data_nascimento = ?")
+        params.append(data_nascimento)
 
     condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
 
@@ -156,20 +159,21 @@ def buscar_usuarios(id_usuario=None, nome=None, email=None, status=None):
     conn.close()
     return resultado
 
+
 def buscar_produtos(nome=None, preco=None, categoria=None, estoque=None):
     condicoes = []
     params = []
 
     if nome:
-        condicoes.append("LOWER(nome) = LOWER(?)")
-        params.append(nome)
-    if preco:
+        condicoes.append("LOWER(nome) LIKE LOWER(?)")
+        params.append(f"%{nome}%")  # Permite buscas parciais
+    if preco is not None:  # Garante que 0 não seja ignorado
         condicoes.append("preco = ?")
         params.append(preco)
     if categoria:
-        condicoes.append("LOWER(categoria) = LOWER(?)")
-        params.append(categoria)
-    if estoque:
+        condicoes.append("LOWER(categoria) LIKE LOWER(?)")
+        params.append(f"%{categoria}%")  # Permite buscas parciais
+    if estoque is not None:  # Garante que 0 não seja ignorado
         condicoes.append("estoque = ?")
         params.append(estoque)
 
@@ -187,12 +191,12 @@ def buscar_pedidos(id_usuario=None, status=None):
     condicoes = []
     params = []
 
-    if id_usuario:
+    if id_usuario is not None:  # Garante que 0 seja considerado
         condicoes.append("id_usuario = ?")
         params.append(id_usuario)
     if status:
-        condicoes.append("LOWER(status) = LOWER(?)")
-        params.append(status)
+        condicoes.append("LOWER(status) LIKE LOWER(?)")
+        params.append(f"%{status}%")  # Permite buscas parciais
 
     condicao_sql = " AND ".join(condicoes) if condicoes else "1=1"
 
@@ -203,4 +207,3 @@ def buscar_pedidos(id_usuario=None, status=None):
     resultado = cursor.fetchall()
     conn.close()
     return resultado
-

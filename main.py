@@ -7,6 +7,7 @@ import json
 import subprocess
 from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Query
+from typing import Optional
 
 app = FastAPI()
 
@@ -27,6 +28,13 @@ class Usuario(BaseModel):
     email: str
     telefone: str
     data_nascimento: str
+
+class UsuarioBusca(BaseModel):
+    id_usuario: Optional[int] = None
+    nome: Optional[str] = None
+    email: Optional[str] = None
+    telefone: Optional[str] = None
+    data_nascimento: Optional[str] = None
 
 class UsuarioDel(BaseModel):
     id: int
@@ -51,9 +59,19 @@ class Produto(BaseModel):
     categoria: str
     estoque: int
 
+class ProdutoBusca(BaseModel):
+    nome: Optional[str] = None
+    preco: Optional[float] = None
+    categoria: Optional[str] = None
+    estoque: Optional[int] = None
+
 class Pedido(BaseModel):
     id_usuario: int
     status: str
+
+class PedidoBusca(BaseModel):
+    id_usuario: Optional[int] = None
+    status: Optional[str] = None
 
 class PedidoProduto(BaseModel):
     id_pedido: int
@@ -79,15 +97,16 @@ class Tabela(BaseModel):
 
 
 @app.post("/buscarUsuarios")
-def api_buscar_usuarios(usuario: Usuario):
-    return buscar_usuarios(usuario.id_usuario, usuario.nome, usuario.email, usuario.status)
+def api_buscar_usuarios(usuario: UsuarioBusca):
+    return buscar_usuarios(usuario.id_usuario, usuario.nome, usuario.email, usuario.telefone, usuario.data_nascimento)
+
 
 @app.post("/buscarProdutos")
-def api_buscar_produtos(produto: Produto):
+def api_buscar_produtos(produto: ProdutoBusca):
     return buscar_produtos(produto.nome, produto.preco, produto.categoria, produto.estoque)
 
 @app.post("/buscarPedidos")
-def api_buscar_pedidos(pedido: Pedido):
+def api_buscar_pedidos(pedido: PedidoBusca):
     return buscar_pedidos(pedido.id_usuario, pedido.status)
 
 
